@@ -69,7 +69,7 @@ d3.json(datafile).then((data => {
         mode: 'markers',
         marker: {
             color: otu_ids,
-            colorscale: "Dark2",
+            colorscale: "Rainbow",
             size: s_values,
         }
     }];
