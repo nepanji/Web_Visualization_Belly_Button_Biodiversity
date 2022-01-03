@@ -1,14 +1,21 @@
 // Grab Belly Bio data
 let datafile  = "samples.json";
 
+// Fetch Json data for dropdown list
+var select_info = d3.select("#selDataset");
+
+// Fetch Json data for demographics table
+var demographics_info = d3.select("#sample-metadata");
+
+//Fetch json data (names list of ids) then add them to the html dropdown "id=#selDataset" 
 d3.json(datafile).then((data => {
     console.log(data);
     var DD_names = data.names;
     DD_names.forEach((object) => {
-        d3.select("#selDataset").append("option").text(object);
+      select_info.append("option").text(object);
     });
 
-    //Fetch data and define variables 
+    //Fetch inital id from data and define variables 
     init_item = data.samples.filter(object => object.id === "940")[0];
     console.log(init_item);
 
@@ -19,21 +26,24 @@ d3.json(datafile).then((data => {
     // define otu labels (metadata list)
     var hoverinfo = init_item.otu_labels;
 
+    console.log(s_values);
+    console.log(otu_ids);
+    console.log(hoverinfo);
 
     //Define Top 10 values
-    test_values = init_item.sample_values.slice(0, 10).reverse();
-    test_ids = init_item.otu_ids.slice(0, 10).reverse();
-    test_labels  = init_item.otu_labels.slice(0, 10).reverse();
+    bar_values = init_item.sample_values.slice(0, 10).reverse();
+    bar_ids = init_item.otu_ids.slice(0, 10).reverse();
+    bar_labels  = init_item.otu_labels.slice(0, 10).reverse();
 
-    console.log(test_values);
-    console.log(test_ids);
-    console.log(test_labels);
+    // console.log(test_values);
+    // console.log(test_ids);
+    // console.log(test_labels);
 
    // Create Bar chart (use Top 10 variables)
    let bar_info = [{
-    x:test_labels,
-    y:test_ids.map(object=>`OTU ${object}`),
-    text:test_values,
+    x:bar_labels,
+    y:bar_ids.map(object=>`OTU ${object}`),
+    text:bar_values,
     type: "bar",
     orientation:"h"
     }];
@@ -65,80 +75,75 @@ d3.json(datafile).then((data => {
     }];
     Plotly.newPlot("bubble", bubble_info, bubble_chart);
     
-    // Define Demographic variables
-    demo_data = data.metadata.filter(object => object.id.toString() == 940)[0];
-    console.log(demo_data);
-    
-    //Display Demographic metadata
-    Object.entries(demo_data).forEach(
-        ([key, value]) => {d3.select("#sample-metadata").append("h6")
-        .text(`${key}: ${value}`)})
-    
-        // ADVANCED CHALLENGE: GAUGE CHART
+// Bonus: GAUGE CHART
+
+    // Fetch json data and define Demographic variables
+    demo_data = data.metadata.filter(object => object.id === 940)[0];
+    // console.log(demo_data);
+
     // Get the washing frequency value for the default test ID
     var wash_freq = demo_data.wfreq;
 
     // ***Bonus: Gauge Chart***
-var gaugeDiv = document.getElementById("gauge-chart");
-
-var gauge_info = [{
-  type: "pie",
-  showlegend: false,
-  hole: 0.5,
-  rotation: 180,
-  values: wash_freq,
-  text: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
-  direction: "clockwise",
-  textinfo: "text",
-  textposition: "inside",
-  marker: {
-    colors: ["rgba(0, 127, 255, 0.6)", "rgba(0, 0, 255, 0.6)", "rgba(127, 0, 255, 0.6)", "rgba(255, 0, 255, 0.6)", "rgba(255, 0, 127, 0.6)", "rgba(255, 0, 0, 0.6)", "rgba(255, 127, 0, 0.6)", "rgba(255, 255, 0, 0.6)", "rgba(127, 255, 0, 0.6)", "white"]
-  },
-  labels: ["0-1", "1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8-9", ""],
-  hoverinfo: "label"
-}];
-// gauge needle
-var degrees = 50, radius = .6;
-var radians = degrees * Math.PI / 180;
-var x = -1 * radius * Math.cos(radians);
-var y = radius * Math.sin(radians);
-
-var layout = {
-  shapes:[{
-      type: 'line',
-      x0: 0.5,
-      y0: 0.5,
-      x1: 0,
-      y1: 0.5,
-      line: {
-        color: 'black',
-        width: 3
+    // https://codepen.io/pen/
+    var gaugeDiv = document.getElementById("gauge-chart");
+    var gauge_info = [
+      {
+        domain: { x: [0, 1], y: [0, 1] },
+        value: wash_freq,
+        title: { text: "Belly Button Wash Frequency <br> Scrubs per Week" },
+        type: "indicator",
+        mode: "gauge+number+delta",
+        delta: { reference: 5 },
+        gauge: {
+          axis: { range: [0, 9] },
+          steps: [
+            { range: [0, 1], color: "rgba(0, 127, 255, 0.6)" },
+            { range: [1, 2], color: "rgba(0, 0, 255, 0.6)" },
+            { range: [2, 3], color: "rgba(127, 0, 255, 0.6)" },
+            { range: [3, 4], color: "rgba(255, 0, 255, 0.6)" },
+            { range: [4, 5], color: "rgba(255, 0, 127, 0.6)" },
+            { range: [5, 6], color: "rgba(255, 0, 0, 0.6)" },
+            { range: [6, 7], color: "rgba(255, 127, 0, 0.6)" },
+            { range: [7, 8], color: "rgba(255, 255, 0, 0.6)" },
+            { range: [8, 9], color: "rgba(127, 255, 0, 0.6)" }
+          ],
+          threshold: {
+            line: { color: "red", width: 4 },
+            thickness: 0.75,
+            value: 10
+          }
+        }
       }
-    }],
-  title: 'Belly Button Wash Frequency',
-  xaxis: {visible: false, range: [0, 1]},
-  yaxis: {visible: false, range: [0, 1]}
-};
+    ];
+    
+    var gauge_chart = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+    Plotly.newPlot(gaugeDiv, gauge_info, gauge_chart);
 
+//DEMO DATA
 
-Plotly.plot(gaugeDiv, gauge_info, layout, {staticPlot: true});
-
-
-
+    //  // Define Demographic variables
+    //  demo_data = data.metadata.filter(object => object.id === 940)[0];
+    //  console.log(demo_data);
+     
+     //Display Demographic metadata
+     Object.entries(demo_data).forEach(
+         ([key, value]) => demographics_info.append("h6")
+         .text(`${key}: ${value}`))
     
     //Update Demo Info when id changes
-    d3.selectAll("selDataset").on("change", updatePlotly);
+    select_info.on("change", updatePlotly);
 
     //Update html Dropdown menu reassigned to new item
-    // function update_elements(){
-        var new_dropdown = d3.select("#selDataset");
+    function updatePlotly(){
+        var new_dropdown = select_info;
         // Assign the value of the dropdown menu option to a variable
         var dataset = new_dropdown.property("value");
-        console.log(dataset)
+        // console.log(dataset)
 
         //Update the data for id selection
-        new_id = data.samples.filter(object => object.id === dataset)[0];
-        console.log(new_id)
+        new_id = data.samples.filter(object => object.id == dataset )[0];
+        // console.log(new_id)
 
         //Define new variables
         let otu_id = new_id.otu_ids;
@@ -151,8 +156,9 @@ Plotly.plot(gaugeDiv, gauge_info, layout, {staticPlot: true});
         let bar_text = otu_label.slice(0, 10).reverse();
 
         //restyle the bar chart once new id value is selected
+        // https://community.plotly.com/t/what-is-the-most-performant-way-to-update-a-graph-with-new-data/639
         Plotly.restyle("bar", "x", [x_data]);
-        Plotly.restyle("bar", "y", [y_data.map(updated_ID => `OTU ${updated_ID}`)]);
+        Plotly.restyle("bar", "y", [y_data.map(updated_ID => `${updated_ID}`)]);
         Plotly.restyle("bar", "text", [bar_text]);
 
         // restyle bubble chart once new id value is selected
@@ -160,16 +166,21 @@ Plotly.plot(gaugeDiv, gauge_info, layout, {staticPlot: true});
         Plotly.restyle("bubble", "y", [y_data]);
         Plotly.restyle("bubble", "labels", [otu_label]);
         Plotly.restyle("bubble", "marker.color", [otu_id]);
-        Plotly.restyle("bubble", "marker.size", [sample_value])
+        Plotly.restyle("bubble", "marker.size", [sample_value]);
 
-		meta_data = data.metadata.filter(object => object.id == dataset)[0];
+        // Clear out current contents in demographics table
+        demographics_info.html("");
+        meta_data = data.metadata.filter(object => object.id == dataset)[0];
 
-		// Clear out current contents in the panel
-		d3.select("#sample-metadata").html("");
+        // Display each key-value pair from the metadata JSON object
+        Object.entries(meta_data).forEach(([key, value]) => demographics_info
+          .append("h6").text(`${key}: ${value}`));
 
-		// Display each key-value pair from the metadata JSON object
-		Object.entries(meta_data).forEach(([key, value]) => d3.select("#sample-metadata").append("h6").text(`${key}: ${value}`));
+        var data_change = meta_data.wfreq;
 
-    
+        
+        Plotly.restyle(gaugeDiv, "value", [data_change]);
+    }
 
-}))
+})
+)
