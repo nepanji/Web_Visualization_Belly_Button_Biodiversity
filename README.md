@@ -40,7 +40,7 @@ To begin this project, the json data for belly button data on each test subject 
   ![Demographics Table](https://user-images.githubusercontent.com/89491352/147953036-bc93293a-164f-4e24-b9c5-a551a1a3a844.png)
   
 ### Bonus: Gauge Chart
-* Plot the weekly washing frequency of the individual
+* Plot the weekly washing frequency of the individual (Source: https://codepen.io/ascotto/pen/eGNaqe?editors=0011)
 * Modify the example gauge code to account for values ranging from 0 through 9
 * Update the chart whenever a new sample is selected
 
