@@ -5,7 +5,6 @@ which catalogs the microbes that colonize human navels.
 
 The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) 
 were present in more than 70% of people, while the rest were relatively rare.
-https://user-images.githubusercontent.com/89491352/147900769-e5d875ec-5b7b-4916-b4b2-135e9ccc0cfc.png 
 
 
 ## Plotly
