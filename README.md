@@ -16,7 +16,7 @@ To begin this project, the json data for belly button data on each test subject 
 * Use otu_ids as the labels for the bar chart
 * Use otu_labels as the hovertext for the chart
 
-  <img width="189" alt="Demographics Table" src="https://user-images.githubusercontent.com/89491352/147949739-9871d96c-0935-4d3d-9366-97a8859462b3.png">
+  ![Dropdown Menu](https://user-images.githubusercontent.com/89491352/147952986-e973a19c-7654-48aa-abd4-7cd5db66e935.png)
   
   ![Bar Chart](https://user-images.githubusercontent.com/89491352/147949912-f3b4d351-86fc-4d37-b6f0-a10fdda7badc.png)
 
@@ -30,14 +30,14 @@ To begin this project, the json data for belly button data on each test subject 
 * Use otu_ids for the marker colors
 * Use otu_labels for the text values
 
-  ![Bubble Chart](https://user-images.githubusercontent.com/89491352/147950065-1b88c739-29d2-4742-be66-791a5ccb10a7.png)
+ ![Bubble Chart](https://user-images.githubusercontent.com/89491352/147951263-cd89f52b-47eb-43f9-aa8e-f69c52387317.png)
 
 ### Demographics Table
 * Display the sample metadata, i.e., an individual's demographic information
 * Display each key-value pair from the metadata JSON object somewhere on the page
 * Update all of the plots any time that a new sample is selected
 
-  <img width="189" alt="Demographics Table" src="https://user-images.githubusercontent.com/89491352/147949739-9871d96c-0935-4d3d-9366-97a8859462b3.png">
+  ![Demographics Table](https://user-images.githubusercontent.com/89491352/147953036-bc93293a-164f-4e24-b9c5-a551a1a3a844.png)
   
 ### Bonus: Gauge Chart
 * Plot the weekly washing frequency of the individual
